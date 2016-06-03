@@ -12,31 +12,59 @@
 
 
 (s/defschema ZipCode {:city String
-                      :loc Double
+                      :loc [Double]
                       :pop Long
                       :state String
                       :_id String
                       })
 
-(defonce zip* (atom (take 4 zips-data)))
+(defonce data* (atom (take 4 zips-data)))
 
-#_(defn get-all-info [] (-> ))
+(defn get-all-info [] (-> @data* reverse))
 
-#_(defn get-info [_id] (@zip* _id))
+(defn get-info [_id]
+  (->> zips-data
+       (filter (fn [z] (if (= _id (:_id z)) true false)))
+       (first)))
 
 (defapi app
   {:swagger
-   {:info {:title "ZIP API"
+   {:ui "/"
+    :spec "/swagger.json"
+    :info {:title "ZIP API"
            :description "an exercize in getting started"}
     :tags [{:name "api", :description "this is a cool get thing that gets info about a zipcode, hopefully"}]}}
 
   (context "/api" []
            :tags ["api"]
            
-           (GET "/" []
+           (GET "/all" []
                 :return [ZipCode]
                 :summary "gets all zipcodes"
+                (ok (get-all-info)))
+
+           (GET "/:id" []
+                :return ZipCode
+                :path-params [id :- String]
+                :summary "retrieves info on a zipcode given a zipcode"
                 (ok (get-info id)))))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 #_(def parsed-json
     (coerce/coercer two coerce/json-coercion-matcher))
