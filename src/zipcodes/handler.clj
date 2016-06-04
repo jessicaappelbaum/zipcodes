@@ -3,7 +3,8 @@
             [ring.util.http-response :refer :all]
             [schema.core :as s]
             [clojure.data.json :as json]
-            [zipcodes.core :refer [wrap-middleware]]))
+            [zipcodes.middleware :refer :all]
+            [ring.middleware.params :refer :all]))
 
 
 
@@ -18,7 +19,7 @@
                       :_id String
                       })
 
-(defonce data* (atom zips-data))
+(defonce data* (atom (take 10 zips-data)))
 
 (defn get-all-info [] (-> @data* reverse))
 
@@ -39,7 +40,10 @@
            :tags ["zipcode"]
            
            (GET "/all" []
+                ;;:middleware [wrap-params]
                 :return [ZipCode]
+                :query-params [{offset :- Long 0}
+                               {limit :- Long 1}]
                 :summary "gets all zipcodes"
                 (ok (get-all-info)))
 
@@ -47,6 +51,6 @@
                 :return ZipCode
                 :path-params [id :- String]
                 :summary "retrieves info on a zipcode given a zipcode"
-                :middleware [wrap-middleware]
+                :middleware [wrap-request-time]
                 (ok (get-info id)))))
 
