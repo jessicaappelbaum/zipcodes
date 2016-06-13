@@ -20,7 +20,7 @@
                       :_id String
                       })
 
-(defonce data* (atom (take 20 zips-data)))
+(defonce data* (atom zips-data))
 
 
 (defn get-info [_id]
