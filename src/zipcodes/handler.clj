@@ -19,7 +19,7 @@
                       :_id String
                       })
 
-(defonce data* (atom (take 10 zips-data)))
+(defonce data* (atom zips-data))
 
 (defn get-all-info [] (-> @data* reverse))
 
@@ -34,17 +34,17 @@
     :spec "/swagger.json"
     :info {:title "ZIP API"
            :description "an exercize in getting started"}
-    :tags [{:name "api", :description "this is a cool get thing that gets info about a zipcode, hopefully"}]}}
+    :tags [{:name "api", :description "this is a  thing that gets a vareity of info about a zipcode"}]}}
 
   (context "/zipcode" []
            :tags ["zipcode"]
            
            (GET "/all" []
-                ;;:middleware [wrap-params]
                 :return [ZipCode]
                 :query-params [{offset :- Long 0}
                                {limit :- Long 1}]
-                :summary "gets all zipcodes"
+                :middleware [wrap-paginate]
+                :summary "gets all zipcodes, in a paginated fashion"
                 (ok (get-all-info)))
 
            (GET "/:id" []

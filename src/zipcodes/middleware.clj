@@ -10,14 +10,20 @@
       (println (- end-time current-time))
       response)))
 
-;;this middleware function will paginate 
+;;this middleware function will paginate
 
-;; (defn wrap-paginate [handler]
-;;   (fn [request]
-;;     (let [response (handler request)
-;;           offset (System/)]
-;;       (println offset)
-;;       response)))
+(defn wrap-paginate [handler]
+  (fn [request]
+    (let [query-params (:params request)
+          per-page (read-string (:limit query-params))
+          response (handler request)
+          limited-results (take per-page (:body response))]
+
+      (println (take per-page (:body response)))
+      (assoc response :body limited-results)
+
+      )))
+
 
 ;; (defn wrap-paginate [query-paramas page per-page]
 ;;     (-> query-params
