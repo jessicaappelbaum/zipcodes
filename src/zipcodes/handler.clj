@@ -8,7 +8,8 @@
 
 
 
-(def zips-data (json/read-str (slurp "resources/zips.json")
+(def zips-data (json/read-str
+                 (slurp "resources/zips.json")
                               :key-fn keyword))
 
 
@@ -19,9 +20,8 @@
                       :_id String
                       })
 
-(defonce data* (atom zips-data))
+(defonce data* (atom (take 20 zips-data)))
 
-(defn get-all-info [] (-> @data* reverse))
 
 (defn get-info [_id]
   (->> zips-data
@@ -45,7 +45,7 @@
                                {limit :- Long 1}]
                 :middleware [wrap-paginate]
                 :summary "gets all zipcodes, in a paginated fashion"
-                (ok (get-all-info)))
+                (ok @data*))
 
            (GET "/:id" []
                 :return ZipCode
