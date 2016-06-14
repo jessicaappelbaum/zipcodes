@@ -36,21 +36,23 @@
            :description "an exercize in getting started"}
     :tags [{:name "api", :description "this is a  thing that gets a vareity of info about a zipcode"}]}}
 
-  (context "/zipcode" []
-           :tags ["zipcode"]
-           
-           (GET "/all" []
-                :return [ZipCode]
-                :query-params [{offset :- Long 0}
-                               {limit :- Long 1}]
-                :middleware [wrap-paginate]
-                :summary "gets all zipcodes, in a paginated fashion"
-                (ok @data*))
+  (middleware [wrap-access-control
+               wrap-request-time]
+              
+              (context "/zipcode" []
+                       :tags ["zipcode"]
+                       
+                       (GET "/all" []
+                            :return [ZipCode]
+                            :query-params [{offset :- Long 0}
+                                           {limit :- Long 1}]
+                            :middleware [wrap-paginate]
+                            :summary "gets all zipcodes, in a paginated fashion"
+                            (ok @data*))
 
-           (GET "/:id" []
-                :return ZipCode
-                :path-params [id :- String]
-                :summary "retrieves info on a zipcode given a zipcode"
-                :middleware [wrap-request-time]
-                (ok (get-info id)))))
+                       (GET "/:id" []
+                            :return ZipCode
+                            :path-params [id :- String]
+                            :summary "retrieves info on a zipcode given a zipcode"
+                            (ok (get-info id))))))
 
