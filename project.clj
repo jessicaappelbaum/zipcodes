@@ -4,8 +4,7 @@
                  [org.clojure/core.async "0.2.382"]
                  [org.clojure/data.json "0.2.6"]
                  [clj-time "0.11.0"] ; required due to bug in `lein-ring uberwar`
-                 [metosin/compojure-api "1.1.1"]
-                 [cljs-http "0.1.41"]]
+                 [metosin/compojure-api "1.1.1"]]
   :ring {:handler zipcodes.handler/app}
   :uberjar-name "server.jar"
   :profiles {:uberjar {:resource-paths ["swagger-ui"]
